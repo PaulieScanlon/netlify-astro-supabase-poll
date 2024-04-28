@@ -1,0 +1,34 @@
+---
+import { createClient } from '@supabase/supabase-js';
+import UnstyledPollComponent from '../components/unstyled-poll-component.astro';
+
+import { groupByItem, getMaxValue, getTotalVotes } from '../utils';
+
+const { searchParams } = Astro.url;
+
+const submitted = searchParams.get('submitted');
+
+const supabase = createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_ANON_KEY);
+
+let data = {};
+let maxValue = 0;
+let totalVotes = 0;
+
+try {
+  const response = await supabase.from('results').select();
+
+  data = groupByItem(response.data!);
+  maxValue = getMaxValue(data);
+  totalVotes = getTotalVotes(data);
+} catch (error) {
+  console.error(error);
+}
+---
+
+<html lang='en'>
+  <body class='prose'>
+    <a href='/'>Back</a>
+    <h1>Unstyled Poll</h1>
+    <UnstyledPollComponent submitted={submitted} results={data} maxValue={maxValue} totalVotes={totalVotes} />
+  </body>
+</html>

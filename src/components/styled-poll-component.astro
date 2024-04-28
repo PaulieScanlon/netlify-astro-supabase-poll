@@ -1,0 +1,117 @@
+---
+import type { PollProps as Props, FormConfig, Field } from '../types';
+
+const { submitted, results, maxValue, totalVotes } = Astro.props;
+
+const config = {
+  form_name: 'space_missions',
+  fields: [
+    {
+      id: 'freedom-7',
+      label: 'Freedom 7',
+    },
+    {
+      id: 'gemini-x',
+      label: 'Gemini X',
+    },
+    {
+      id: 'apollo-8',
+      label: 'Apollo 8',
+    },
+    {
+      id: 'apollo-11',
+      label: 'Apollo 11',
+    },
+  ],
+} as FormConfig;
+---
+
+<script>
+  const form = document.getElementById('myForm');
+  const status = document.getElementById('status');
+
+  const handleSubmit = async (event: SubmitEvent) => {
+    event.preventDefault();
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    try {
+      const response = await fetch('/api/post-result', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message);
+      }
+      window.location.search = 'submitted=true';
+    } catch (error) {
+      status!.innerHTML = (error as Error).message;
+    }
+  };
+
+  form?.addEventListener('submit', handleSubmit);
+</script>
+
+<div class='px-8 py-6 bg-white shadow'>
+  {
+    submitted ? (
+      <div class='flex flex-col gap-6'>
+        <p class='font-bold m-0 text-lg'>Results of the poll so far</p>
+        <ul class='flex flex-col gap-4 list-none p-0 m-0'>
+          {Object.entries(results).map((result: [string, number]) => {
+            const [name, value] = result;
+            const width = (value / Number(maxValue)) * 100;
+
+            return (
+              <li class='flex gap-4 m-0 p-0 items-start'>
+                <span>{`x${value}`}</span>
+                <label class='flex gap-1 grow flex-col font-bold'>
+                  {name}
+                  <div class='bg-blue-500 h-2 rounded-full' style={{ width: `${width}%` }} />
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+        <p id='status' class='m-0 text-gray-400 font-light'>
+          {`Total Votes: ${totalVotes}`}
+        </p>
+      </div>
+    ) : (
+      <div class='flex flex-col gap-6'>
+        <p class='font-bold m-0 text-lg'>What's your favorite Space mission?</p>
+        <form id='myForm' method='POST' class='flex flex-col gap-4'>
+          <ul class='list-none p-0 m-0'>
+            {config.fields.map((field: Field) => {
+              const { id, label } = field;
+
+              return (
+                <li class='p-0 m-0'>
+                  <label class='cursor-pointer inline-flex gap-3 items-center font-bold'>
+                    <input
+                      type='radio'
+                      id={id}
+                      name={config.form_name}
+                      value={label}
+                      class='cursor-pointer appearance-none rounded-full w-4 h-4 ring-2 ring-blue-300 hover:ring-blue-500 checked:bg-blue-500 checked:ring-blue-500 transition-all duration-300'
+                    />
+                    {label}
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <button
+            id='submitButton'
+            class='inline-flex text-sm self-end capitalize rounded px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-300'
+          >
+            vote
+          </button>
+          <p id='status' class='m-0 text-red-400 font-medium' />
+        </form>
+      </div>
+    )
+  }
+</div>
