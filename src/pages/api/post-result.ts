@@ -14,7 +14,7 @@ export const POST: APIRoute = async ({ request }) => {
       JSON.stringify({
         message: 'Select one answer',
       }),
-      { status: 400 }
+      { status: 422 }
     );
   }
 
