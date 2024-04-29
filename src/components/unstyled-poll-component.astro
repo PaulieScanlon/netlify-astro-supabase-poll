@@ -54,50 +54,53 @@ const config = {
   form?.addEventListener('submit', handleSubmit);
 </script>
 
-{
-  submitted ? (
-    <>
-      <p>Results</p>
-      <ul>
-        {Object.entries(results).map((result: [string, number]) => {
-          const [name, value] = result;
-
-          return (
-            <li>
-              <label>
-                {name}
-                <progress max={String(maxValue)} value={String(value)}>
-                  {value}
-                </progress>
-                {`x${value}`}
-              </label>
-            </li>
-          );
-        })}
-      </ul>
-      <p>{`Total Votes: ${totalVotes}`}</p>
-    </>
-  ) : (
-    <>
-      <p>Form</p>
-      <form id='myForm' method='POST'>
+<div>
+  {
+    submitted ? (
+      <div>
+        <p>Results of the poll so far</p>
         <ul>
-          {config.fields.map((field: Field) => {
-            const { id, label } = field;
+          {Object.entries(results).map((result: [string, number]) => {
+            const [name, value] = result;
+            const width = (value / Number(maxValue)) * 100;
 
             return (
               <li>
+                <span>{`x${value}`}</span>
                 <label>
-                  <input type='radio' id={id} name={config.form_name} value={label} />
-                  {label}
+                  {name}
+                  <progress max={String(maxValue)} value={String(value)}>
+                    {value}
+                  </progress>
                 </label>
               </li>
             );
           })}
         </ul>
-        <button id='submitButton'>vote</button>
-        <p id='status' />
-      </form>
-    </>
-  )
-}
+        <p id='status'>{`Total Votes: ${totalVotes}`}</p>
+      </div>
+    ) : (
+      <div>
+        <p>What's your favorite Space mission?</p>
+        <form id='myForm' method='POST'>
+          <ul>
+            {config.fields.map((field: Field) => {
+              const { id, label } = field;
+
+              return (
+                <li>
+                  <label>
+                    <input type='radio' id={id} name={config.form_name} value={label} />
+                    {label}
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+          <button id='submitButton'>vote</button>
+          <p id='status' />
+        </form>
+      </div>
+    )
+  }
+</div>
