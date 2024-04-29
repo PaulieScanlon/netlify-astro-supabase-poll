@@ -1,14 +1,15 @@
 ---
 import { createClient } from '@supabase/supabase-js';
-import StyledPollComponent from '../components/styled-poll-component.astro';
+import type { Database } from '../types/database.types';
 
+import StyledPollComponent from '../components/styled-poll-component.astro';
 import { groupByItem, getMaxValue, getTotalVotes } from '../utils';
 
 const { searchParams } = Astro.url;
 
 const submitted = searchParams.get('submitted');
 
-const supabase = createClient(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_ANON_KEY);
+const supabase = createClient<Database>(import.meta.env.SUPABASE_URL, import.meta.env.SUPABASE_ANON_KEY);
 
 let data = {};
 let maxValue = 0;

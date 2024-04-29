@@ -1,8 +1,8 @@
 export interface Result {
-  id: number;
   created_at: string;
-  result: string;
   form_name: string;
+  id: number;
+  result: string;
 }
 
 export interface PollProps {

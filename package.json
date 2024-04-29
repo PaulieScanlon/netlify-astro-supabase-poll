@@ -19,6 +19,7 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.13"
+    "@tailwindcss/typography": "^0.5.13",
+    "supabase": "^1.163.6"
   }
 }
