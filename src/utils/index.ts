@@ -14,7 +14,3 @@ export const getMaxValue = (object: { [key: string]: number }) => {
     })
   );
 };
-
-export const getTotalVotes = (object: { [key: string]: number }) => {
-  return Object.values(object).reduce((items, item) => items + item, 0);
-};

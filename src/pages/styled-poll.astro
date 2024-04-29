@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from '../types/database.types';
 
 import StyledPollComponent from '../components/styled-poll-component.astro';
-import { groupByItem, getMaxValue, getTotalVotes } from '../utils';
+import { groupByItem, getMaxValue } from '../utils';
 
 const { searchParams } = Astro.url;
 
@@ -20,7 +20,7 @@ try {
 
   data = groupByItem(response.data!);
   maxValue = getMaxValue(data);
-  totalVotes = getTotalVotes(data);
+  totalVotes = response.data!.length;
 } catch (error) {
   console.error(error);
 }
