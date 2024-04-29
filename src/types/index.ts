@@ -1,10 +1,3 @@
-export interface Result {
-  created_at: string;
-  form_name: string;
-  id: number;
-  result: string;
-}
-
 export interface PollProps {
   submitted: string | null;
   results: { [key: string]: number };
