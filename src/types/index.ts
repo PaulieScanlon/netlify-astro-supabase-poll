@@ -5,12 +5,12 @@ export interface PollProps {
   totalVotes: Number;
 }
 
-export interface Field {
-  id: string;
-  label: string;
-}
-
 export interface FormConfig {
   form_name: string;
   fields: Field[];
+}
+
+export interface Field {
+  id: string;
+  label: string;
 }
